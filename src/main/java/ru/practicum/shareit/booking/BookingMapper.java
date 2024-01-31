@@ -5,7 +5,7 @@ import ru.practicum.shareit.user.User;
 
 public class BookingMapper {
 
-    static public Booking toBooking(BookingDto bookingDto, User user, Item item) {
+    public static Booking toBooking(BookingDto bookingDto, User user, Item item) {
         Booking booking = new Booking();
         booking.setStart(bookingDto.getStart());
         booking.setEnd(bookingDto.getEnd());
@@ -15,7 +15,7 @@ public class BookingMapper {
         return booking;
     }
 
-    static public BookingByBooker toBookingByBooker(Booking booking) {
+    public static BookingByBooker toBookingByBooker(Booking booking) {
         return BookingByBooker
                 .builder()
                 .id(booking.getId())
