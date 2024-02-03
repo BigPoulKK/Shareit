@@ -2,7 +2,7 @@ package ru.practicum.shareit.item;
 
 import java.util.List;
 
-public interface ItemService {
+public interface ItemStorage {
     public ItemDto get(Long itemId);
 
     public ItemDto add(ItemDto itemDto, Long userId);
