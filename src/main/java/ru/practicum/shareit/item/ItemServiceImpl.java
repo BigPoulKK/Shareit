@@ -13,10 +13,7 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,9 +66,6 @@ class ItemServiceImpl implements ItemService {
             if (itemDtoUpdate.getDescription() != null) {
                 item.setDescription(itemDtoUpdate.getDescription());
             }
-//            if (itemDtoUpdate.getRequest() != null) {
-//                item.setRequest(itemDtoUpdate.getRequest());
-//            }
             Item itemUpdate = itemRepository.save(item);
             Item items = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
             log.info("update item {}", items);

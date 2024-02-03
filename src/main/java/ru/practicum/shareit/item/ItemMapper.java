@@ -33,7 +33,6 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-//                .request(item.getRequest())
                 .build();
     }
 
@@ -44,7 +43,6 @@ public class ItemMapper {
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
-//        item.setRequest(itemDto.getRequest());
         item.setUserId(user);
         return item;
 
