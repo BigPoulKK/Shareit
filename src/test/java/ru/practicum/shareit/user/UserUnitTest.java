@@ -107,7 +107,7 @@ public class UserUnitTest {
     }
 
     @Test
-    void CheckUpdateWithUserNotFound() {
+    void checkUpdateWithUserNotFound() {
         Long id = 1L;
         UserDto userDto = UserDto.builder()
                 .id(id)
@@ -198,7 +198,7 @@ public class UserUnitTest {
     }
 
     @Test
-    void CheckUserWithErrorEmail() {
+    void checkUserWithErrorEmail() {
         Long id = 1L;
         UserDto userDto = UserDto.builder()
                 .id(id)
