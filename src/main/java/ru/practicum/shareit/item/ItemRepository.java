@@ -12,6 +12,7 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {
 
     List<Item> findByUserId(long userId, Pageable pageable);
+
     List<ItemInfo> findByRequestId(long requestId);
 
     @Query(value = "select * " +

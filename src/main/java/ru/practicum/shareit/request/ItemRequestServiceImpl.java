@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.RequestNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.ItemInfo;
-import ru.practicum.shareit.item.ItemInfoImpl;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

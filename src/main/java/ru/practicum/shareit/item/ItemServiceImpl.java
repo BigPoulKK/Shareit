@@ -16,13 +16,11 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import static ru.practicum.shareit.booking.Status.REJECTED;
 
