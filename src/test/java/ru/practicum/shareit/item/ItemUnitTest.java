@@ -164,7 +164,7 @@ public class ItemUnitTest {
     }
 
     @Test
-    void UpdateItemAccessRights() {
+    void CheckUpdateItemWithAccessRightsError() {
         User userNew = new User();
         user.setId(2L);
         user.setName("VI");
