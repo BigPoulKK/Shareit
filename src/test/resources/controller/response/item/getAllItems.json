@@ -1,0 +1,13 @@
+[{
+  "id" : 1,
+  "name" : "Дрель",
+  "description" : "отвертка, пилы",
+  "available" : false
+},
+  {
+    "id" : 2,
+    "name" : "Набор инструментов",
+    "description" : "Дрель, отвертка, пилы",
+    "available" : true
+  }
+]

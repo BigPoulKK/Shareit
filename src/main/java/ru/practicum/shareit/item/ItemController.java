@@ -1,15 +1,19 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.ItemNotFoundException;
-import ru.practicum.shareit.exception.UserNotFoundException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 
 @RestController
+@Validated
 @RequestMapping("/items")
 public class ItemController {
     ItemService itemService;
@@ -27,44 +31,38 @@ public class ItemController {
     @PostMapping
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") Long userId,
                           @Valid @RequestBody ItemDto item) {
-        if (userId != null) {
-            return itemService.addNewItem(userId, item);
-        }
-        throw new UserNotFoundException("User not found");
+        return itemService.addNewItem(userId, item);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId,
                           @Valid @RequestBody ItemDtoUpdate item) {
-        if (userId != null) {
-            return itemService.updateItem(itemId, userId, item);
-        }
-        throw new UserNotFoundException("User not found");
+
+        return itemService.updateItem(itemId, userId, item);
+
     }
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        if (userId != null) {
-            return itemService.getUserItems(userId);
-        }
-        throw new UserNotFoundException("User not found");
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+
+        final Pageable pageable = PageRequest.of(from / size, size);
+        return itemService.getUserItems(userId, pageable);
     }
 
     @GetMapping("/search")
-    public List<ItemInfo> getItemByQueryField(@RequestParam(name = "text") String queryField) {
-        return itemService.search(queryField.toLowerCase());
+    public List<ItemInfo> getItemByQueryField(@RequestParam(name = "text") String queryField,
+                                              @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
+
+        final Pageable pageable = PageRequest.of(from / size, size);
+        return itemService.search(queryField.toLowerCase(), pageable);
     }
 
     @PostMapping("/{itemId}/comment")
     public Comment getComment(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId, @Valid @RequestBody Comment comment) {
-        if (userId != null) {
-            if (itemId != null) {
-                return itemService.addComment(userId, itemId, comment);
-            }
-            throw new ItemNotFoundException("Item not found");
-        }
-        throw new UserNotFoundException("User not found");
+
+        return itemService.addComment(userId, itemId, comment);
     }
-
-
 }

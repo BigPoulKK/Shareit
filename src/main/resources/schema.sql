@@ -1,5 +1,4 @@
 
-
 CREATE TABLE IF NOT EXISTS users (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 email varchar(320),
@@ -11,7 +10,7 @@ CREATE TABLE IF NOT EXISTS requests (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 description varchar(300),
 user_id BIGINT REFERENCES users(id),
-create_date timestamp
+created timestamp WITHOUT time zone
 );
 
 CREATE TABLE IF NOT EXISTS items (
@@ -20,6 +19,7 @@ name varchar(100),
 description varchar(300),
 available bool default false,
 user_id BIGINT REFERENCES users(id),
+request_id BIGINT REFERENCES requests(id),
 CONSTRAINT AK_id UNIQUE(id, user_id)
 );
 CREATE TABLE IF NOT EXISTS booking (

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -15,7 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where b.user_id = ?1 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findByBookerId(Long userId);
+    List<Booking> findByBookerId(Long userId, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -36,35 +37,35 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where b.user_id = ?1 and b.end_time < ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingPast(Long userId, LocalDateTime time);
+    List<Booking> findBookingPast(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
             "where b.user_id = ?1 and ?2 between b.start_time and b.end_time " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingCurrent(Long userId, LocalDateTime time);
+    List<Booking> findBookingCurrent(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
             "where b.user_id = ?1 and b.end_time > ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingFuture(Long userId, LocalDateTime time);
+    List<Booking> findBookingFuture(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
             "where b.user_id = ?1 and b.status = ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingWaiting(Long userId, String waiting);
+    List<Booking> findBookingWaiting(Long userId, String waiting, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
             "where b.user_id = ?1 and b.status = ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingRejected(Long userId, String rejected);
+    List<Booking> findBookingRejected(Long userId, String rejected, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -72,7 +73,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingItemsByOwner(Long userId);
+    List<Booking> findBookingItemsByOwner(Long userId, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -80,7 +81,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 and b.end_time < ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingPastItemsByOwner(Long userId, LocalDateTime time);
+    List<Booking> findBookingPastItemsByOwner(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -88,7 +89,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 and ?2 between b.start_time and b.end_time " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingCurrentItemsByOwner(Long userId, LocalDateTime time);
+    List<Booking> findBookingCurrentItemsByOwner(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -96,7 +97,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 and b.end_time > ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingFutureItemsByOwner(Long userId, LocalDateTime time);
+    List<Booking> findBookingFutureItemsByOwner(Long userId, LocalDateTime time, Pageable pageable);
 
     @Query(value = "select * " +
             "from booking as b " +
@@ -104,7 +105,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 and b.status = ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingWaitingItemsByOwner(Long userId, String status);
+    List<Booking> findBookingWaitingItemsByOwner(Long userId, String status, Pageable pageable);
 
     @Query(value = "select b.* " +
             "from booking as b " +
@@ -112,6 +113,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
             "where t.user_id = ?1 and b.status = ?2 " +
             "ORDER BY b.start_time DESC",
             nativeQuery = true)
-    List<Booking> findBookingRejectedItemsByOwner(Long userId, String status);
+    List<Booking> findBookingRejectedItemsByOwner(Long userId, String status, Pageable pageable);
 
 }

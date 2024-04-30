@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.BookingByBooker;
-import ru.practicum.shareit.request.ItemRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,6 @@ import java.util.Set;
 @Data
 @Builder
 public class ItemDto {
-
     private Long id;
     @NotNull
     @NotBlank(message = "name cannot be empty")
@@ -21,8 +19,7 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
-    private ItemRequest request;
-
+    private Long requestId;
     private BookingByBooker lastBooking;
 
     private BookingByBooker nextBooking;

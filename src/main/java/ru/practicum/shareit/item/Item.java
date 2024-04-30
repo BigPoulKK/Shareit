@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(schema = "public", name = "items")
 @NoArgsConstructor
 public class Item {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
@@ -34,5 +33,6 @@ public class Item {
     private Long userId;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Comment> comments;
-
+    @Column(name = "request_id", nullable = false)
+    private Long requestId;
 }

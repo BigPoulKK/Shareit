@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,11 +16,11 @@ public interface ItemService {
     void deleteItem(Long userId, Long itemId);
 
     @Transactional(readOnly = true)
-    List<ItemDto> getUserItems(Long userId);
+    List<ItemDto> getUserItems(Long userId, Pageable pageable);
 
     public ItemDto getItem(Long id, Long userId);
 
-    List<ItemInfo> search(String text);
+    List<ItemInfo> search(String text, Pageable pageable);
 
     public Comment addComment(Long userId, Long itemId, Comment comment);
 }
