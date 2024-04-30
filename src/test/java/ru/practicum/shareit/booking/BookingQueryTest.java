@@ -33,11 +33,10 @@ public class BookingQueryTest {
     private final BookingService service;
     static Long idUser = 1L;
     static Long idItem = 1L;
-    static Long idBooking = 0L;
+    static Long idBooking = 1L;
 
     @BeforeEach
     void addUser() {
-        ++idBooking;
         UserDto userDto = userService.saveUser(UserDto.builder()
                 .id(idUser)
                 .name("Пётр")
@@ -65,7 +64,7 @@ public class BookingQueryTest {
                 .end(LocalDateTime.of(2024, 5, 21, 21, 12, 3))
                 .itemId(idItem)
                 .build();
-        service.createBooking(bookingDto, userDto.getId());
+        idBooking = service.createBooking(bookingDto, userDto.getId()).getId();
 
         TypedQuery<Booking> query = em.createQuery("Select u from Booking u where u.id = :id", Booking.class);
         Booking booking = query
@@ -90,7 +89,7 @@ public class BookingQueryTest {
                 .end(LocalDateTime.of(2024, 5, 21, 21, 12, 3))
                 .itemId(idItem)
                 .build();
-        service.createBooking(bookingDto, userDto.getId());
+        idBooking = service.createBooking(bookingDto, userDto.getId()).getId();
         service.confirmTheBooking(idUser, idBooking, true);
 
         TypedQuery<Booking> query = em.createQuery("Select u from Booking u where u.id = :id", Booking.class);
