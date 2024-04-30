@@ -31,8 +31,8 @@ public class BookingQueryTest {
     private final ItemService itemService;
     private final UserService userService;
     private final BookingService service;
-    static Long idUser = 0L;
-    static Long idItem = 0L;
+    static Long idUser = 1L;
+    static Long idItem = 1L;
     static Long idBooking = 0L;
 
     @BeforeEach
