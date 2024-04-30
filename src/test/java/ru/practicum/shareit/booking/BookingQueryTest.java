@@ -37,20 +37,20 @@ public class BookingQueryTest {
 
     @BeforeEach
     void addUser() {
-        ++idUser;
-        ++idItem;
         ++idBooking;
         UserDto userDto = userService.saveUser(UserDto.builder()
                 .id(idUser)
                 .name("Пётр")
                 .email("petr@mail.com")
                 .build());
+        idUser = userDto.getId();
         ItemDto itemDto = itemService.addNewItem(userDto.getId(), ItemDto.builder()
                 .id(idItem)
                 .name("Дрель")
                 .description("Сверла в комплекте")
                 .available(true)
                 .build());
+        idItem = itemDto.getId();
     }
 
     @Test

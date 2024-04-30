@@ -124,8 +124,8 @@ public class ItemUnitTest {
 
         ItemDto itemDto = ItemMapper.toItemDto(item);
         itemDto.setComments(Set.of());
-        itemDto.setNextBooking(BookingByBooker.builder().bookerId(2L).build());
-        itemDto.setLastBooking(BookingByBooker.builder().bookerId(2L).build());
+        itemDto.setNextBooking(BookingByBooker.builder().bookerId(1L).build());
+        itemDto.setLastBooking(BookingByBooker.builder().bookerId(1L).build());
 
         ItemDto serviceItem = service.getItem(id, id);
 
