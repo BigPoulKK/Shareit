@@ -2,11 +2,14 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.exception.AccessRightsError;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.TheItemHasAlreadyBeenBooked;
 import ru.practicum.shareit.exception.UserNotFoundException;
@@ -14,8 +17,10 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static ru.practicum.shareit.booking.Status.REJECTED;
 
@@ -29,10 +34,10 @@ class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<ItemDto> getUserItems(Long userId) {
+    public List<ItemDto> getUserItems(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        List<Item> userItems = itemRepository.findByUserId(userId);
+        List<Item> userItems = itemRepository.findByUserId(userId, pageable);
         List<ItemDto> itemDto = new ArrayList<>();
         for (Item item : userItems) {
             itemDto.add(getItem(item.getId(), userId));
@@ -46,7 +51,7 @@ class ItemServiceImpl implements ItemService {
     public ItemDto addNewItem(Long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Item item = itemRepository.save(ItemMapper.toItem(itemDto, user.getId()));
+        Item item = itemRepository.save(ItemMapper.toItem(itemDto, userId));
         log.info("add new item {}", item);
         return ItemMapper.toItemDto(item);
     }
@@ -66,12 +71,14 @@ class ItemServiceImpl implements ItemService {
             if (itemDtoUpdate.getDescription() != null) {
                 item.setDescription(itemDtoUpdate.getDescription());
             }
+            if (itemDtoUpdate.getRequestId() != null) {
+                item.setRequestId(itemDtoUpdate.getRequestId());
+            }
             Item itemUpdate = itemRepository.save(item);
-            Item items = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
-            log.info("update item {}", items);
-            return ItemMapper.toItemDto(items);
+            log.info("update item {}", itemUpdate);
+            return ItemMapper.toItemDto(itemUpdate);
         }
-        throw new UserNotFoundException("Пользователь не найден");
+        throw new AccessRightsError("You don't have rights");
     }
 
     @Transactional
@@ -82,14 +89,14 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItem(Long id, Long userId) {
+    public ItemDto getItem(Long id, Long userId) throws NullPointerException {
         Item item = itemRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Item not found"));
         ItemDto itemDto = ItemMapper.toItemDto(item);
         if (item.getUserId().equals(userId)) {
             LocalDateTime date = LocalDateTime.now();
             log.info("Время: {}", date);
-            List<Booking> bookingsPast = bookingRepository.findByItemIdPast(id, date, REJECTED);
-            List<Booking> bookingsFuture = bookingRepository.findByItemIdFuture(id, date, REJECTED);
+            List<Booking> bookingsPast = bookingRepository.findByItemIdPast(id, date.withNano(0), REJECTED);
+            List<Booking> bookingsFuture = bookingRepository.findByItemIdFuture(id, date.withNano(0), REJECTED);
             if (bookingsPast.size() != 0) {
                 itemDto.setLastBooking(BookingMapper.toBookingByBooker(bookingsPast.get(0)));
             }
@@ -106,10 +113,10 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemInfo> search(String text) {
+    public List<ItemInfo> search(String text, Pageable pageable) {
         if (!text.isBlank()) {
             log.info("search {}", text);
-            return itemRepository.findItemsWhereContainsTheText(text);
+            return itemRepository.findItemsWhereContainsTheText(text, pageable);
         }
         return new ArrayList<>();
     }
@@ -120,7 +127,7 @@ class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
         LocalDateTime date = LocalDateTime.now();
-        List<Booking> bookings = bookingRepository.findBookingPastItemsByOwner(item.getUserId(), date);
+        List<Booking> bookings = bookingRepository.findBookingPastItemsByOwner(item.getUserId(), date, PageRequest.of(0, 10));
         for (Booking booking : bookings) {
             if (booking.getBooker().getId().equals(userId)) {
                 comment.setItem(item);
@@ -132,6 +139,5 @@ class ItemServiceImpl implements ItemService {
         }
         throw new TheItemHasAlreadyBeenBooked("You can't book this thing");
     }
-
 
 }

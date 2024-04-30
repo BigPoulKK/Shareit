@@ -13,16 +13,14 @@ public class ErrorHandler {
     @ExceptionHandler({ValidationExceptionUser.class, TheItemHasAlreadyBeenBooked.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public Map<String, String> validationError(final RuntimeException e) {
-        return Map.of("error", "ошибка валидации",
-                "errorMessage", e.getMessage());
+        return Map.of("error", "ошибка валидации");
     }
 
     @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class,
-            BookingNotFoundException.class, AccessRightsError.class})
+            BookingNotFoundException.class, RequestNotFoundException.class, AccessRightsError.class})
     @ResponseStatus(HttpStatus.NOT_FOUND) //404
     public Map<String, String> objectNotFound(final RuntimeException e) {
-        return Map.of("error", "объект не найден",
-                "errorMessage", e.getMessage());
+        return Map.of("error", "объект не найден");
     }
 
     @ExceptionHandler({ExceptionEnum.class})

@@ -8,4 +8,6 @@ public interface ItemInfo {
     String getDescription();
 
     Boolean getAvailable();
+
+    Long getRequestId();
 }

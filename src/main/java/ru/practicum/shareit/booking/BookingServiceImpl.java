@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -84,49 +86,48 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingByUser(Long userId, Status state) {
+    public List<Booking> getAllBookingByUser(Long userId, Status state, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         LocalDateTime date = LocalDateTime.now();
         log.info("Время: {}", date);
         switch (state) {
             case ALL:
-                return bookingRepository.findByBookerId(userId);
+                return bookingRepository.findByBookerId(userId, pageable);
             case PAST:
-                return bookingRepository.findBookingPast(userId, date);
+                return bookingRepository.findBookingPast(userId, date.withNano(0), pageable);
             case FUTURE:
-                return bookingRepository.findBookingFuture(userId, date);
+                return bookingRepository.findBookingFuture(userId, date.withNano(0), pageable);
             case CURRENT:
-                List<Booking> bookings = bookingRepository.findBookingCurrent(userId, date);
-                return bookings;
+                return bookingRepository.findBookingCurrent(userId, date.withNano(0), pageable);
             case WAITING:
-                return bookingRepository.findBookingWaiting(userId, WAITING.name());
+                return bookingRepository.findBookingWaiting(userId, WAITING.name(), pageable);
             case REJECTED:
-                return bookingRepository.findBookingRejected(userId, REJECTED.name());
+                return bookingRepository.findBookingRejected(userId, REJECTED.name(), pageable);
             default:
                 throw new RuntimeException("the request was not found");
         }
     }
 
     @Override
-    public List<Booking> getAllBookingItemsByOwner(Long userId, Status state) {
+    public List<Booking> getAllBookingItemsByOwner(Long userId, Status state, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         LocalDateTime date = LocalDateTime.now();
         log.info("Время: {}", date);
         switch (state) {
             case ALL:
-                return bookingRepository.findBookingItemsByOwner(userId);
+                return bookingRepository.findBookingItemsByOwner(userId, pageable);
             case PAST:
-                return bookingRepository.findBookingPastItemsByOwner(userId, date);
+                return bookingRepository.findBookingPastItemsByOwner(userId, date.withNano(0), pageable);
             case FUTURE:
-                return bookingRepository.findBookingFutureItemsByOwner(userId, date);
+                return bookingRepository.findBookingFutureItemsByOwner(userId, date.withNano(0), pageable);
             case CURRENT:
-                return bookingRepository.findBookingCurrentItemsByOwner(userId, date);
+                return bookingRepository.findBookingCurrentItemsByOwner(userId, date.withNano(0), pageable);
             case WAITING:
-                return bookingRepository.findBookingWaitingItemsByOwner(userId, WAITING.name());
+                return bookingRepository.findBookingWaitingItemsByOwner(userId, WAITING.name(), pageable);
             case REJECTED:
-                return bookingRepository.findBookingRejectedItemsByOwner(userId, REJECTED.name());
+                return bookingRepository.findBookingRejectedItemsByOwner(userId, REJECTED.name(), pageable);
             default:
                 throw new RuntimeException("the request was not found");
         }

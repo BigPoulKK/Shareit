@@ -30,16 +30,13 @@ class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        if (id.equals(user.getId())) {
-            if (userDto.getEmail() != null) {
-                user.setEmail(userDto.getEmail());
-            }
-            if (userDto.getName() != null) {
-                user.setName(userDto.getName());
-            }
-            return UserMapper.toUserDto(userRepository.save(user));
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
         }
-        throw new RuntimeException("the user does not match");
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
+        }
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override

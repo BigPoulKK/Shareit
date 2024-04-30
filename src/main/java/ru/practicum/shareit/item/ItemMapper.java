@@ -10,7 +10,7 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .comments(item.getComments())
-//                .request(item.getRequest())
+                .requestId(item.getRequestId())
                 .build();
     }
 
@@ -20,8 +20,9 @@ public class ItemMapper {
             item.setName(itemDto.getName());
             item.setDescription(itemDto.getDescription());
             item.setAvailable(itemDto.getAvailable());
-//            item.setRequest(itemDto.getRequest());
+            item.setRequestId(itemDto.getRequestId());
             item.setUserId(user);
+            item.setId(itemDto.getId());
             return item;
         }
         throw new ValidationExceptionUser("not all data is entered");
@@ -33,18 +34,19 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .requestId(item.getRequestId())
                 .build();
     }
 
-    public static Item toItem(ItemDtoUpdate itemDto, Long user) {
+    public static ItemDto toItemDto(ItemDtoUpdate item) {
 
-        Item item = new Item();
-        item.setId(itemDto.getId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        item.setUserId(user);
-        return item;
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequestId())
+                .build();
 
     }
 }
